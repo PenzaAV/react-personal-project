@@ -1,8 +1,8 @@
-import { MAIN_URL, TOKEN } from './config';
+import { MAIN_URL, TOKEN } from "./config";
 export const api = {
     fetchTasks: async () => {
         const response = await fetch(MAIN_URL, {
-            method:  'GET',
+            method:  "GET",
             headers: {
                 Authorization: TOKEN,
             },
@@ -10,16 +10,20 @@ export const api = {
 
         const { data: tasks } = await response.json();
 
+        console.log(tasks);
+
         return tasks;
     },
-    createTask: async () => {
+
+    createTask: async (value) => {
+        console.log(typeof value);
         const response = await fetch(MAIN_URL, {
-            method:  'POST',
+            method:  "POST",
             headers: {
-                'content-type': 'application/json',
+                "content-type": "application/json",
                 Authorization:  TOKEN,
             },
-            "message": "string",
+            body: JSON.stringify({ message: value }),
         });
 
         const { data: task } = await response.json();
@@ -29,12 +33,12 @@ export const api = {
     updateTask: async (...task) => {
         const response = await fetch(MAIN_URL, {
             ...task,
-            method:  'PUT',
+            method:  "PUT",
             headers: {
-                'content-type': 'application/json',
+                "content-type": "application/json",
                 Authorization:  TOKEN,
             },
-            "message": "string",
+            message: "string",
         });
 
         const { data: updatedTask } = await response.json();
@@ -44,17 +48,15 @@ export const api = {
     removeTask: async (task_id) => {
         const response = await fetch(MAIN_URL, {
             POST_ID: task_id,
-            method:  'DELETE',
+            method:  "DELETE",
             headers: {
                 Authorization: TOKEN,
             },
-            "message": "string",
+            message: "string",
         });
-
     },
 
     completeAllTasks: async (tasks) => {
-
         const completed = [];
 
         for (const task in tasks) {

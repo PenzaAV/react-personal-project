@@ -1,9 +1,8 @@
 // Core
-import React, { PureComponent } from 'react';
+import React, { PureComponent } from "react";
 
 // Instruments
-import Styles from './styles.m.css';
-import palette from '../../theme/palette.css';
+import Styles from "./styles.m.css";
 
 // Components
 import Star from "../../theme/assets/Star";
@@ -26,41 +25,51 @@ export default class Task extends PureComponent {
         favorite,
         message,
     });
+
     _completeTask = () => {
         const { completed } = this.state;
+
         this.setState({
             completed: !completed,
         });
     };
-
+    _setTaskEditingState = () => {};
+    _updateNewTaskMessage = () => {};
+    _updateTask = () => {};
+    _updateTaskMessageOnClick = () => {};
+    _cancelUpdatingTaskMessage = () => {};
+    _updateTaskMessageOnKeyDown = () => {};
+    _toggleTaskCompletedState = () => {};
+    _toggleTaskFavoriteState = () => {};
+    _removeTask = () => {};
     render () {
-        const { completed } = this.state;
+        const { completed, message, favorite, id } = this.props;
+
         return (
-            <li className = { Styles.task }>
+            <li className = { Styles.task } id = { id }>
                 <div className = { Styles.content }>
                     <Checkbox
+                        inlineBlock
                         checked = { completed }
                         className = { Styles.toggleTaskCompletedState }
                         color1 = '#3B8EF3'
                         color2 = '#fff'
-                        inlineBlock
                         onClick = { this._completeTask }
                     />
-                    <input disabled type = 'text' value = { `test task` } />
+                    <input disabled type = 'text' value = { message } />
                 </div>
                 <div className = { Styles.actions }>
                     <Star
-                        className = { Styles.toggleTaskFavoriteState }
                         inlineBlock
-
+                        className = { Styles.toggleTaskFavoriteState }
                     />
                     <Edit
-                        className = { Styles.updateTaskMessageOnClick }
                         inlineBlock
+                        className = { Styles.updateTaskMessageOnClick }
                     />
                     <Remove inlineBlock />
                 </div>
-
-            </li>);
+            </li>
+        );
     }
 }
