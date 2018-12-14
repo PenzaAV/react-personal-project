@@ -26,20 +26,26 @@ export default class Task extends PureComponent {
         message,
     });
 
-    _completeTask = () => {
+    _toggleTaskCompletedState = () => {
         const { completed } = this.state;
 
-        this.setState({
-            completed: !completed,
-        });
+        const task = this._getTaskShape({ completed: !completed });
+
+        console.log(!completed);
+
+        this.props._updateTaskAsync({ task });
     };
     _setTaskEditingState = () => {};
     _updateNewTaskMessage = () => {};
-    _updateTask = () => {};
+    _updateTask = () => {
+        const task = this._getTaskShape({});
+
+        console.log(task);
+        //this.props._updateTaskAsync(task);
+    };
     _updateTaskMessageOnClick = () => {};
     _cancelUpdatingTaskMessage = () => {};
     _updateTaskMessageOnKeyDown = () => {};
-    _toggleTaskCompletedState = () => {};
     _toggleTaskFavoriteState = () => {};
     _removeTask = () => {};
     render () {
@@ -47,15 +53,15 @@ export default class Task extends PureComponent {
 
         return (
             <li className = { Styles.task } id = { id }>
+                <Checkbox
+                    inlineBlock
+                    checked = { completed }
+                    className = { Styles.toggleTaskCompletedState }
+                    color1 = '#3B8EF3'
+                    color2 = '#fff'
+                    onClick = { this._toggleTaskCompletedState }
+                />
                 <div className = { Styles.content }>
-                    <Checkbox
-                        inlineBlock
-                        checked = { completed }
-                        className = { Styles.toggleTaskCompletedState }
-                        color1 = '#3B8EF3'
-                        color2 = '#fff'
-                        onClick = { this._completeTask }
-                    />
                     <input disabled type = 'text' value = { message } />
                 </div>
                 <div className = { Styles.actions }>

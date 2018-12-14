@@ -10,13 +10,10 @@ export const api = {
 
         const { data: tasks } = await response.json();
 
-        console.log(tasks);
-
         return tasks;
     },
 
     createTask: async (value) => {
-        console.log(typeof value);
         const response = await fetch(MAIN_URL, {
             method:  "POST",
             headers: {
@@ -32,37 +29,42 @@ export const api = {
     },
     updateTask: async (...task) => {
         const response = await fetch(MAIN_URL, {
-            ...task,
             method:  "PUT",
             headers: {
                 "content-type": "application/json",
                 Authorization:  TOKEN,
             },
-            message: "string",
+            body: JSON.stringify([
+                (id) => id,
+                (message) => message,
+                (completed) => completed,
+                (favorite) => favorite
+            ]),
         });
 
         const { data: updatedTask } = await response.json();
 
         return updatedTask;
     },
-    removeTask: async (task_id) => {
+    removeTask: async (taskId) => {
         const response = await fetch(MAIN_URL, {
-            POST_ID: task_id,
+            POST_ID: taskId,
             method:  "DELETE",
             headers: {
                 Authorization: TOKEN,
             },
-            message: "string",
+            body: JSON.stringify({
+                id: taskId,
+            }),
         });
     },
 
     completeAllTasks: async (tasks) => {
-        const completed = [];
+        const completedTasks = tasks.map(async (task) => {
+            task.completed = true;
+            await api.updateTask(task);
+        });
 
-        for (const task in tasks) {
-            completed.push(this.removeTask(task.id));
-        }
-
-        return Promise.all(completed);
+        await Promise.all(completedTasks);
     },
 };
