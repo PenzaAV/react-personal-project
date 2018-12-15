@@ -27,7 +27,7 @@ export const api = {
 
         return task;
     },
-    updateTask: async (...task) => {
+    updateTask: async (task) => {
         const response = await fetch(MAIN_URL, {
             method:  "PUT",
             headers: {
@@ -35,27 +35,25 @@ export const api = {
                 Authorization:  TOKEN,
             },
             body: JSON.stringify([
-                (id) => id,
-                (message) => message,
-                (completed) => completed,
-                (favorite) => favorite
+                {
+                    id:        task.id,
+                    message:   task.message,
+                    completed: task.completed,
+                    favorite:  task.favorite,
+                }
             ]),
         });
 
-        const { data: updatedTask } = await response.json();
+        const { data } = await response.json();
 
-        return updatedTask;
+        return data[0];
     },
     removeTask: async (taskId) => {
-        const response = await fetch(MAIN_URL, {
-            POST_ID: taskId,
+        await fetch(`${MAIN_URL}/${taskId}`, {
             method:  "DELETE",
             headers: {
                 Authorization: TOKEN,
             },
-            body: JSON.stringify({
-                id: taskId,
-            }),
         });
     },
 

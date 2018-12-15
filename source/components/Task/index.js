@@ -11,9 +11,6 @@ import Edit from "../../theme/assets/Edit";
 import Checkbox from "../../theme/assets/Checkbox";
 
 export default class Task extends PureComponent {
-    state = {
-        completed: false,
-    };
     _getTaskShape = ({
         id = this.props.id,
         completed = this.props.completed,
@@ -27,27 +24,33 @@ export default class Task extends PureComponent {
     });
 
     _toggleTaskCompletedState = () => {
-        const { completed } = this.state;
+        const { completed } = this.props;
 
-        const task = this._getTaskShape({ completed: !completed });
+        const taskModel = this._getTaskShape({ completed: !completed });
 
-        console.log(!completed);
-
-        this.props._updateTaskAsync({ task });
+        this.props._updateTaskAsync(taskModel);
     };
     _setTaskEditingState = () => {};
     _updateNewTaskMessage = () => {};
     _updateTask = () => {
-        const task = this._getTaskShape({});
-
-        console.log(task);
-        //this.props._updateTaskAsync(task);
+        // const task = this._getTaskShape({});
+        //
+        // console.log(task);
+        // this.props._updateTaskAsync(task);
     };
     _updateTaskMessageOnClick = () => {};
     _cancelUpdatingTaskMessage = () => {};
     _updateTaskMessageOnKeyDown = () => {};
-    _toggleTaskFavoriteState = () => {};
-    _removeTask = () => {};
+    _toggleTaskFavoriteState = () => {
+        const { favorite } = this.props;
+
+        const taskModel = this._getTaskShape({ favorite: !favorite });
+
+        this.props._updateTaskAsync(taskModel);
+    };
+    _removeTask = () => {
+        this.props._removeTaskAsync(this.props.id);
+    };
     render () {
         const { completed, message, favorite, id } = this.props;
 
@@ -68,12 +71,14 @@ export default class Task extends PureComponent {
                     <Star
                         inlineBlock
                         className = { Styles.toggleTaskFavoriteState }
+                        onClick = { this._toggleTaskFavoriteState }
                     />
                     <Edit
                         inlineBlock
                         className = { Styles.updateTaskMessageOnClick }
+                        onClick = { this._updateTaskMessageOnClick }
                     />
-                    <Remove inlineBlock />
+                    <Remove inlineBlock onClick = { this._removeTask } />
                 </div>
             </li>
         );

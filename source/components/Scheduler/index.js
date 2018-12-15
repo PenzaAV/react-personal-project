@@ -35,20 +35,23 @@ export default class Scheduler extends Component {
             tasksFilter: event.target.value.toLowerCase(),
         });
     };
-    _updateTaskAsync = async (task) => {
+    _updateTaskAsync = async (taskModel) => {
         this._setTasksFetchingState(true);
-        await api.updateTask(task);
+        const updatedTask = await api.updateTask(taskModel);
+
+        this.setState(({ tasks }) => ({
+            tasks: tasks.map(
+                (task) => task.id === updatedTask.id ? updatedTask : task
+            ),
+        }));
         this._setTasksFetchingState(false);
     };
     _removeTaskAsync = async (taskId) => {
         this._setTasksFetchingState(true);
-        const result = await api.removeTask(taskId);
-
-        if (result) {
-            this.setState({
-                tasks: this.state.tasks.filter((task) => task.id !== taskId),
-            });
-        }
+        await api.removeTask(taskId);
+        this.setState(({ tasks }) => ({
+            tasks: tasks.filter((task) => task.id !== taskId),
+        }));
         this._setTasksFetchingState(false);
     };
     _completeAllTasksAsync = async () => {
@@ -120,6 +123,7 @@ export default class Scheduler extends Component {
 
             return (
                 <Task
+                    _removeTaskAsync = { this._removeTaskAsync }
                     _updateTaskAsync = { this._updateTaskAsync }
                     completed = { completed }
                     favorite = { favorite }
