@@ -4,7 +4,7 @@ import { func, string, number, array } from "prop-types";
 //Components
 import Task from "../../components/Task";
 import Checkbox from "../../theme/assets/Checkbox";
-
+import FlipMove from "react-flip-move";
 // Instruments
 import Styles from "./styles.m.css";
 import { api } from "../../REST";
@@ -115,6 +115,7 @@ export default class Scheduler extends Component {
         });
         this._setTasksFetchingState(false);
     };
+
     render () {
         const { tasks } = this.state;
 
@@ -150,17 +151,20 @@ export default class Scheduler extends Component {
                     <section>
                         <form onSubmit = { this._createTaskAsync }>
                             <input
+                                className = 'createTask'
                                 maxLength = { 50 }
-                                placeholder = 'Описание моей новой задачи'
+                                placeholder = 'Описaние моей новой задачи'
                                 type = 'text'
                                 value = { this.state.newTaskMessage }
                                 onChange = { this._updateNewTaskMessage }
                             />
                             <button>Добавить задачу</button>
                         </form>
-                        <ul>
-                            <div>{tasksJSX}</div>
-                        </ul>
+                        <div className = 'overlay'>
+                            <ul>
+                                <FlipMove duration = { 400 }>{tasksJSX}</FlipMove>
+                            </ul>
+                        </div>
                     </section>
                     <footer>
                         <Checkbox
@@ -171,6 +175,9 @@ export default class Scheduler extends Component {
                             width = { 25 }
                             onClick = { this._completeAllTasksAsync }
                         />
+                        <span className = 'completeAllTasks'>
+                            Все задачи выполнены
+                        </span>
                     </footer>
                 </main>
             </section>
