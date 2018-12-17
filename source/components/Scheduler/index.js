@@ -17,10 +17,8 @@ export default class Scheduler extends Component {
         isTasksFetching: false,
         tasks:           [],
     };
-
     componentDidMount () {
         this._fetchTasksAsync();
-        console.log(typeof this.state.tasks);
     }
     _getAllCompleted = () => {
         const { tasks } = this.state;
@@ -63,7 +61,6 @@ export default class Scheduler extends Component {
             return null;
         }
         this._setTasksFetchingState(true);
-        console.log(notCompletedTasks);
         await api.completeAllTasks(notCompletedTasks);
 
         const completedTasks = this.state.tasks.map((task) => {
@@ -158,9 +155,11 @@ export default class Scheduler extends Component {
                             />
                             <button>Добавить задачу</button>
                         </form>
-                        <ul>
-                            <div>{tasksJSX}</div>
-                        </ul>
+                        <div>
+                            <ul>
+                                <div>{tasksJSX}</div>
+                            </ul>
+                        </div>
                     </section>
                     <footer>
                         <Checkbox
