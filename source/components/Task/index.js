@@ -1,5 +1,5 @@
 // Core
-import React, { PureComponent, createRef } from "react";
+import React, { PureComponent } from "react";
 
 // Instruments
 import Styles from "./styles.m.css";
@@ -124,21 +124,33 @@ export default class Task extends PureComponent {
             [Styles.completed]: completed,
         });
     };
+
+    _handleTaskMessageKeydown = (event) => {
+        switch (event.key) {
+            case "Enter":
+                this._updateTaskMessageOnKeyDown();
+                break;
+            case "Escape":
+                this._cancelUpdatingTaskMessage();
+                break;
+            default:
+                break;
+        }
+    };
+
     render () {
-        const { completed, message, favorite, id } = this.props;
+        const { completed, favorite, id } = this.props;
         const { isTaskEditing, newMessage } = this.state;
 
-        const taskStyles = this._getTaskStyles();
-
         return (
-            <li className = { taskStyles } id = { id }>
+            <li className = { Styles.task }>
                 <div className = { Styles.content }>
                     <Checkbox
                         inlineBlock
                         checked = { completed }
                         className = { Styles.toggleTaskCompletedState }
                         color1 = '#3B8EF3'
-                        color2 = '#fff'
+                        color2 = '#FFF'
                         height = { 25 }
                         width = { 25 }
                         onClick = { this._toggleTaskCompletedState }
@@ -146,11 +158,12 @@ export default class Task extends PureComponent {
 
                     <input
                         disabled = { !isTaskEditing }
+                        maxLength = { 50 }
                         ref = { this.taskInput }
                         type = 'text'
                         value = { newMessage }
                         onChange = { this._updateNewTaskMessage }
-                        onKeyDown = { this._keydownHandler }
+                        onKeyDown = { this._handleTaskMessageKeydown }
                     />
                 </div>
                 <div className = { Styles.actions }>
@@ -165,6 +178,7 @@ export default class Task extends PureComponent {
                     />
                     <Edit
                         inlineBlock
+                        checked = { isTaskEditing }
                         className = { Styles.updateTaskMessageOnClick }
                         color1 = '#3B8EF3'
                         color2 = '#000'
@@ -178,6 +192,7 @@ export default class Task extends PureComponent {
                         color1 = '#3B8EF3'
                         color2 = '#000'
                         height = { 17 }
+                        width = { 17 }
                         onClick = { this._removeTask }
                     />
                 </div>

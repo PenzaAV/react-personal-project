@@ -4,11 +4,12 @@ import { func, string, number, array } from "prop-types";
 //Components
 import Task from "../../components/Task";
 import Checkbox from "../../theme/assets/Checkbox";
-
+import FlipMove from "react-flip-move";
 // Instruments
 import Styles from "./styles.m.css";
 import { api } from "../../REST";
-import Spinner from "../Spinner"; // ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
+import Spinner from "../Spinner";
+import {sortTasksByGroup} from "../../instruments"; // ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
 
 export default class Scheduler extends Component {
     state = {
@@ -61,6 +62,7 @@ export default class Scheduler extends Component {
             return null;
         }
         this._setTasksFetchingState(true);
+
         await api.completeAllTasks(notCompletedTasks);
 
         const completedTasks = this.state.tasks.map((task) => {
@@ -112,10 +114,11 @@ export default class Scheduler extends Component {
         });
         this._setTasksFetchingState(false);
     };
+
     render () {
         const { tasks } = this.state;
-
-        const tasksJSX = tasks.map((task) => {
+        const sortedTasks = sortTasksByGroup(tasks);
+        const tasksJSX = sortedTasks.map((task) => {
             const { id, completed, favorite, message } = task;
 
             return (
@@ -147,17 +150,18 @@ export default class Scheduler extends Component {
                     <section>
                         <form onSubmit = { this._createTaskAsync }>
                             <input
+                                className = 'createTask'
                                 maxLength = { 50 }
-                                placeholder = 'Описание моей новой задачи'
+                                placeholder = 'Описaние моей новой задачи'
                                 type = 'text'
                                 value = { this.state.newTaskMessage }
                                 onChange = { this._updateNewTaskMessage }
                             />
                             <button>Добавить задачу</button>
                         </form>
-                        <div>
+                        <div className = 'overlay'>
                             <ul>
-                                <div>{tasksJSX}</div>
+                                <FlipMove duration = { 400 }>{tasksJSX}</FlipMove>
                             </ul>
                         </div>
                     </section>
@@ -170,6 +174,9 @@ export default class Scheduler extends Component {
                             width = { 25 }
                             onClick = { this._completeAllTasksAsync }
                         />
+                        <span className = 'completeAllTasks'>
+                            Все задачи выполнены
+                        </span>
                     </footer>
                 </main>
             </section>
