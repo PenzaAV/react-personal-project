@@ -46,7 +46,7 @@ export const api = {
 
         const { data } = await response.json();
 
-        return data[0];
+        return data;
     },
     removeTask: async (taskId) => {
         await fetch(`${MAIN_URL}/${taskId}`, {

@@ -86,11 +86,7 @@ export default class Task extends PureComponent {
             isTaskEditing: false,
         });
     };
-    _keydownHandler = (event) => {
-        const { keyCode } = event;
 
-        this._updateTaskMessageOnKeyDown(event);
-    };
     _updateTaskMessageOnKeyDown = (event) => {
         const { newMessage } = this.state;
         const taskModel = this._getTaskShape({
@@ -125,25 +121,13 @@ export default class Task extends PureComponent {
         });
     };
 
-    _handleTaskMessageKeydown = (event) => {
-        switch (event.key) {
-            case "Enter":
-                this._updateTaskMessageOnKeyDown();
-                break;
-            case "Escape":
-                this._cancelUpdatingTaskMessage();
-                break;
-            default:
-                break;
-        }
-    };
-
     render () {
         const { completed, favorite, id } = this.props;
         const { isTaskEditing, newMessage } = this.state;
+        const taskStyles = this._getTaskStyles();
 
         return (
-            <li className = { Styles.task }>
+            <li className = { taskStyles }>
                 <div className = { Styles.content }>
                     <Checkbox
                         inlineBlock
@@ -163,7 +147,7 @@ export default class Task extends PureComponent {
                         type = 'text'
                         value = { newMessage }
                         onChange = { this._updateNewTaskMessage }
-                        onKeyDown = { this._handleTaskMessageKeydown }
+                        onKeyDown = { this._updateTaskMessageOnKeyDown }
                     />
                 </div>
                 <div className = { Styles.actions }>
