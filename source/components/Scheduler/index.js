@@ -8,7 +8,8 @@ import FlipMove from "react-flip-move";
 // Instruments
 import Styles from "./styles.m.css";
 import { api } from "../../REST";
-import Spinner from "../Spinner"; // ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
+import Spinner from "../Spinner";
+import {sortTasksByGroup} from "../../instruments"; // ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
 
 export default class Scheduler extends Component {
     state = {
@@ -20,7 +21,6 @@ export default class Scheduler extends Component {
 
     componentDidMount () {
         this._fetchTasksAsync();
-        console.log(typeof this.state.tasks);
     }
     _getAllCompleted = () => {
         const { tasks } = this.state;
@@ -63,7 +63,7 @@ export default class Scheduler extends Component {
             return null;
         }
         this._setTasksFetchingState(true);
-        console.log(notCompletedTasks);
+
         await api.completeAllTasks(notCompletedTasks);
 
         const completedTasks = this.state.tasks.map((task) => {
@@ -118,8 +118,8 @@ export default class Scheduler extends Component {
 
     render () {
         const { tasks } = this.state;
-
-        const tasksJSX = tasks.map((task) => {
+        const sortedTasks = sortTasksByGroup(tasks);
+        const tasksJSX = sortedTasks.map((task) => {
             const { id, completed, favorite, message } = task;
 
             return (
