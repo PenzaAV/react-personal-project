@@ -44,6 +44,14 @@ export const sortTasksByGroup = (tasks) => {
     ];
 };
 
+export const filterTasksByMessage = (tasks, filter) => {
+    if (filter !== '') {
+        return tasks.filter((task) => task.message.indexOf(filter) !== -1);
+    }
+
+    return tasks;
+};
+
 export class BaseTaskModel {
     constructor (
         id = v4(),

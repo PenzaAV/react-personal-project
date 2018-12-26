@@ -9,7 +9,8 @@ import FlipMove from "react-flip-move";
 import Styles from "./styles.m.css";
 import { api } from "../../REST";
 import Spinner from "../Spinner";
-import {sortTasksByGroup} from "../../instruments"; // ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
+import { sortTasksByGroup } from "../../instruments";
+import {filterTasksByMessage} from "../../instruments/helpers"; // ! Импорт модуля API должен иметь именно такой вид (import { api } from '../../REST')
 
 export default class Scheduler extends Component {
     state = {
@@ -117,10 +118,15 @@ export default class Scheduler extends Component {
     };
 
     render () {
-        const { tasks } = this.state;
-        const sortedTasks = sortTasksByGroup(tasks);
-        const tasksJSX = sortedTasks.map((task) => {
+        const { tasks, tasksFilter } = this.state;
+        const filteredTasks = filterTasksByMessage(sortTasksByGroup(tasks), tasksFilter);
+        let isAllTasksCompleted = true;
+        const tasksJSX = filteredTasks.map((task) => {
             const { id, completed, favorite, message } = task;
+
+            if (completed === false) {
+                isAllTasksCompleted = false;
+            }
 
             return (
                 <Task
@@ -168,7 +174,7 @@ export default class Scheduler extends Component {
                     </section>
                     <footer>
                         <Checkbox
-                            checked = { false }
+                            checked = { isAllTasksCompleted }
                             color1 = '#363636'
                             color2 = '#fff'
                             height = { 25 }

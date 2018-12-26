@@ -4,6 +4,7 @@ import React, { PureComponent } from "react";
 // Instruments
 import Styles from "./styles.m.css";
 import cx from "classnames";
+import { func, string, bool } from "prop-types";
 
 // Components
 import Star from "../../theme/assets/Star";
@@ -12,11 +13,22 @@ import Edit from "../../theme/assets/Edit";
 import Checkbox from "../../theme/assets/Checkbox";
 
 export default class Task extends PureComponent {
+    static propTypes = {
+        completed:        bool.isRequired,
+        favorite:         bool.isRequired,
+        id:               string.isRequired,
+        message:          string.isRequired,
+        _removeTaskAsync: func,
+        _updateTaskAsync: func,
+    };
+
     state = {
         isTaskEditing: false,
         newMessage:    this.props.message,
     };
+
     taskInput = React.createRef();
+
     _getTaskShape = ({
         id = this.props.id,
         completed = this.props.completed,
@@ -28,9 +40,11 @@ export default class Task extends PureComponent {
         favorite,
         message,
     });
+
     _taskInputFocus = () => {
         this.taskInput.current.focus();
     };
+
     _toggleTaskCompletedState = () => {
         const { completed } = this.props;
 
@@ -38,13 +52,14 @@ export default class Task extends PureComponent {
 
         this.props._updateTaskAsync(taskModel);
     };
-    _setTaskEditingState = (bool) => {
+    _setTaskEditingState = (boolValue) => {
         this.setState({
-            isTaskEditing: bool,
+            isTaskEditing: boolValue,
+        }, () => {
+            if (boolValue) {
+                this._taskInputFocus();
+            }
         });
-        if (bool) {
-            this._taskInputFocus();
-        }
     };
     _updateNewTaskMessage = (event) => {
         this.setState({
@@ -122,7 +137,7 @@ export default class Task extends PureComponent {
     };
 
     render () {
-        const { completed, favorite, id } = this.props;
+        const { completed, favorite } = this.props;
         const { isTaskEditing, newMessage } = this.state;
         const taskStyles = this._getTaskStyles();
 

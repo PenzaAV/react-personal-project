@@ -24,7 +24,6 @@ describe('Инрфаструктурный модуль api:', () => {
         afterAll(() => {
             jest.clearAllMocks();
         });
-        const task = new BaseTaskModel();
 
         test('должен отослать fetch—запрос', () => {
             api.createTask();
@@ -32,7 +31,7 @@ describe('Инрфаструктурный модуль api:', () => {
         });
 
         test('при ответе API со статусом 200 — должен вернуть данные, предоставленные API', async () => {
-            await expect(api.createTask(task)).resolves.toEqual([]);
+            await expect(api.createTask()).resolves.toEqual([]);
         });
     });
 
