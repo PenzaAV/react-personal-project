@@ -46,12 +46,13 @@ export default class Task extends PureComponent {
     };
 
     _toggleTaskCompletedState = () => {
-        const { completed } = this.props;
+        const { completed, _updateTaskAsync } = this.props;
 
         const taskModel = this._getTaskShape({ completed: !completed });
 
-        this.props._updateTaskAsync(taskModel);
+        _updateTaskAsync(taskModel);
     };
+
     _setTaskEditingState = (boolValue) => {
         this.setState({
             isTaskEditing: boolValue,
@@ -61,13 +62,15 @@ export default class Task extends PureComponent {
             }
         });
     };
+
     _updateNewTaskMessage = (event) => {
         this.setState({
             newMessage: event.target.value,
         });
     };
+
     _updateTask = () => {
-        const { message } = this.props;
+        const { message, _updateTaskAsync } = this.props;
         const { newMessage } = this.state;
 
         if (message === newMessage) {
@@ -77,9 +80,10 @@ export default class Task extends PureComponent {
         }
         const task = this._getTaskShape({ message: newMessage });
 
-        this.props._updateTaskAsync(task);
+        _updateTaskAsync(task);
         this._setTaskEditingState(false);
     };
+
     _updateTaskMessageOnClick = () => {
         const { isTaskEditing } = this.state;
 
@@ -95,9 +99,12 @@ export default class Task extends PureComponent {
         }
         this._setTaskEditingState(true);
     };
+
     _cancelUpdatingTaskMessage = () => {
+        const { message } = this.props;
+
         this.setState({
-            newMessage:    this.props.message,
+            newMessage:    message,
             isTaskEditing: false,
         });
     };
@@ -117,19 +124,23 @@ export default class Task extends PureComponent {
 
         return null;
     };
+
     _toggleTaskFavoriteState = () => {
-        const { favorite } = this.props;
+        const { favorite, _updateTaskAsync } = this.props;
 
         const taskModel = this._getTaskShape({ favorite: !favorite });
 
-        this.props._updateTaskAsync(taskModel);
+        _updateTaskAsync(taskModel);
     };
+
     _removeTask = () => {
-        this.props._removeTaskAsync(this.props.id);
+        const { id, _removeTaskAsync } = this.props;
+
+        _removeTaskAsync(id);
     };
 
     _getTaskStyles = () => {
-        const completed = this.props.completed;
+        const { completed } = this.props;
 
         return cx(Styles.task, {
             [Styles.completed]: completed,
